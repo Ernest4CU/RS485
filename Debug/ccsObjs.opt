@@ -1,0 +1,1 @@
+"./src/Const_str.obj" "./src/Flash.obj" "./src/System_init.obj" "./src/System_running.obj" "./src/TimerA.obj" "./src/Watchdog.obj" "./src/interrupt.obj" "./src/lcd1602.obj" "./src/main.obj" "./src/system.obj" "./src/uart.obj" "./src/uart1.obj" "../lnk_msp430f149.cmd" -l"libc.a" 

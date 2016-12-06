@@ -1,7 +1,7 @@
 #ifndef _UART_H_
 #define _UARTH_
 
-
+#include "type.h"
 #define baud_h    0x03           //提取高位
 #define baud_l        0x41              //低位
 
@@ -20,7 +20,12 @@ void Uart1_Send_Byte(unsigned char data);
 void UART1_SendString(unsigned char *s);
 void Uart1_Send_Uint32(unsigned long data);
 
-void uart1_get_cmd();
+uint8 uart1_get_cmd();
 void uart1_get_cmdadd();
 void uart1_displayAll();
+
+void Uart1_cmd_hander();
+void Uart1_cmd_parser(uint8 *cmd);
+void Uart1_cmd_parser_1(uint8 *cmd);
+
 #endif

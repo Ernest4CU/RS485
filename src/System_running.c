@@ -12,7 +12,7 @@
 void Sys_loop()
 {
 	LCD_clear();
-	LCD_write_str(LcdLine1,0,"Communication:");
+//	LCD_write_str(LcdLine1,0,"Communication:");
 
 ////	uint8 tem[3]={0x8a,0x9b,0x7c};
 //	uint8 tt=0x88;
@@ -34,9 +34,15 @@ void Sys_loop()
 		}
 		if(uart1_commands>0)
 		{
-			uart1_get_cmd();
-			uart1_displayAll();
-			LCD_write_char(LcdLine2,15,uart1_commands|0x30);
+			if(uart1_get_cmd())
+			{
+				LCD_write_str(LcdLine2,0,"ERROR");
+			}
+			else{
+				uart1_displayAll();
+				Uart1_cmd_hander();
+			}
+//			LCD_write_char(LcdLine2,15,uart1_commands|0x30);
 			uart1_commands--;
 		}
 	}

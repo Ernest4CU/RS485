@@ -146,6 +146,23 @@ void LCD_Hex8ToAscii(uint8 Hex8_line,uint8 Hex8_adr,uint8 Hex8_val)
 		LCD_write_char(Hex8_line,Hex8_adr+3,(temp + 55));
 	}
 }
+
+void LCD_Hex8ToAsciiWithOut0x(uint8 Hex8_line,uint8 Hex8_adr,uint8 Hex8_val)
+{
+	uint8 temp=0x00;
+	temp = (Hex8_val >> 4) & 0x0f;
+	if (temp < 10) {
+		LCD_write_char(Hex8_line,Hex8_adr,(temp | 0x30));
+	} else {
+		LCD_write_char(Hex8_line,Hex8_adr,(temp + 55));
+	}
+	temp = Hex8_val  & 0x0f;
+	if (temp < 10) {
+		LCD_write_char(Hex8_line,Hex8_adr+1,(temp | 0x30));
+	} else {
+		LCD_write_char(Hex8_line,Hex8_adr+1,(temp + 55));
+	}
+}
 /*************************************************************************
  * 将16位数据在Lcd上显示
  *************************************************************************/

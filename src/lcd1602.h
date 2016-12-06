@@ -43,6 +43,7 @@ void LCD_write_char(unsigned char row,unsigned char column,unsigned char data);/
 void LCD_init(void);//	显示屏初始化函数
 void LCD_Desk(void);//液晶显示界面初始化
 void LCD_Hex8ToAscii(uint8 Hex8_line,uint8 Hex8_adr,uint8 Hex8_val);//将16位数据在Lcd的Hex8_adr上显示
+void LCD_Hex8ToAsciiWithOut0x(uint8 Hex8_line,uint8 Hex8_adr,uint8 Hex8_val);
 void LCD_Hex16ToAscii(uint8 Hex16_line,uint8 Hex16_adr,uint16 Hex16_val);//将16位数据在Lcd的Hex16_adr上显示
 
 #endif

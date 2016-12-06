@@ -12,6 +12,7 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./src/Const_str.obj" \
 "./src/Flash.obj" \
+"./src/Modbus.obj" \
 "./src/System_init.obj" \
 "./src/System_running.obj" \
 "./src/TimerA.obj" \
@@ -162,8 +163,8 @@ RS485.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "src\Const_str.pp" "src\Flash.pp" "src\System_init.pp" "src\System_running.pp" "src\TimerA.pp" "src\Watchdog.pp" "src\interrupt.pp" "src\lcd1602.pp" "src\main.pp" "src\system.pp" "src\uart.pp" "src\uart1.pp" 
-	-$(RM) "src\Const_str.obj" "src\Flash.obj" "src\System_init.obj" "src\System_running.obj" "src\TimerA.obj" "src\Watchdog.obj" "src\interrupt.obj" "src\lcd1602.obj" "src\main.obj" "src\system.obj" "src\uart.obj" "src\uart1.obj" 
+	-$(RM) "src\Const_str.pp" "src\Flash.pp" "src\Modbus.pp" "src\System_init.pp" "src\System_running.pp" "src\TimerA.pp" "src\Watchdog.pp" "src\interrupt.pp" "src\lcd1602.pp" "src\main.pp" "src\system.pp" "src\uart.pp" "src\uart1.pp" 
+	-$(RM) "src\Const_str.obj" "src\Flash.obj" "src\Modbus.obj" "src\System_init.obj" "src\System_running.obj" "src\TimerA.obj" "src\Watchdog.obj" "src\interrupt.obj" "src\lcd1602.obj" "src\main.obj" "src\system.obj" "src\uart.obj" "src\uart1.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

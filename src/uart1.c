@@ -2,7 +2,7 @@
 #include "lcd1602.h"
 #include "Sys_Config.h"
 #include <msp430x14x.h>
-
+#include "Modbus.h"
 #include "const_str.h"
 #include "type.h"
 
@@ -97,14 +97,59 @@ void Uart1_Send_Uint32(uint32 data)
 	Uart1_Send_Byte(temp|0x30);
 }
 
+void Uart1_display_Uint32(uint32 data)
+{
+	uint8 temp=0;
+	temp=data/1000000000;
+	LCD_write_char(LcdLine2,0,temp|0x30);
+	temp=data%1000000000/100000000;
+	LCD_write_data(temp|0x30);
+	temp=data%100000000/10000000;
+	LCD_write_data(temp|0x30);
+	temp=data%10000000/1000000;
+	LCD_write_data(temp|0x30);
+	temp=data%1000000/100000;
+	LCD_write_data(temp|0x30);
+	temp=data%100000/10000;
+	LCD_write_data(temp|0x30);
+	temp=data%10000/1000;
+	LCD_write_data(temp|0x30);
+	temp=data%1000/100;
+	LCD_write_data(temp|0x30);
+	temp=data%100/10;
+	LCD_write_data(temp|0x30);
+	temp=data%10;
+	LCD_write_data(temp|0x30);
+}
 
 void uart1_displayAll()
 {
-	uint8 i=0;
-	for(i=0;i<Os_uart1_cmd_len;i++)
+//	LCD_Hex8ToAscii(LcdLine1,0,OsUart1CmdBuff[Os_uart1_cmd_len-2]);
+//	LCD_Hex8ToAscii(LcdLine1,8,OsUart1CmdBuff[Os_uart1_cmd_len-1]);
+//	Uart1_display_Uint32(crc16(OsUart1CmdBuff,6));
+	uint8 i=0,j=0;
+	uint16 crcData;
+	if(Os_uart1_cmd_len>5)
 	{
-		LCD_write_char(LcdLine2,i,OsUart1CmdBuff[i]);
+		for(i=0;i<5;i++)
+		{
+			LCD_Hex8ToAsciiWithOut0x(LcdLine1,i*3,OsUart1CmdBuff[i]);
+		}
+		for(i=5;i<Os_uart1_cmd_len;i++)
+		{
+			LCD_Hex8ToAsciiWithOut0x(LcdLine2,j++*3,OsUart1CmdBuff[i]);
+		}
 	}
+	else{
+		for(i=0;i<Os_uart1_cmd_len;i++)
+			{
+				LCD_Hex8ToAsciiWithOut0x(LcdLine1,i*3,OsUart1CmdBuff[i]);
+			}
+	}
+	crcData=crc16(OsUart1CmdBuff,Os_uart1_cmd_len-2);
+	LCD_Hex8ToAsciiWithOut0x(LcdLine2,9,crcData>>8);
+	LCD_Hex8ToAsciiWithOut0x(LcdLine2,12,crcData);
+
 }
 
 
@@ -137,8 +182,10 @@ void uart1_get_cmdadd()
 	}
 }
 
-void uart1_get_cmd()
+uint8 uart1_get_cmd()
 {
+	uint8 checkCrcErr=0;
+	uint16 crcData=0x0000;
 	uint8 i=0;
 	uint8 j=0;
 	if(Os_uart1_cmd_nln>Os_uart1_cmd_nll){
@@ -155,5 +202,44 @@ void uart1_get_cmd()
 	}else {
 		;
 	}
+	crcData=crc16(OsUart1CmdBuff,Os_uart1_cmd_len-2);
+	if(crcData!=OsUart1CmdBuff[Os_uart1_cmd_len-1]+(OsUart1CmdBuff[Os_uart1_cmd_len-2]<<8))
+	{
+		checkCrcErr=1;
+	}
+	return checkCrcErr;
+
 }
 
+
+void Uart1_cmd_hander()
+{
+	//解析并执行命令
+	Uart1_cmd_parser(OsUart1CmdBuff);
+	//清除指令buff
+}
+
+void Uart1_cmd_parser(uint8 *cmd)
+{
+	switch(*cmd){
+	case 0x01:
+		Uart1_cmd_parser_1((uint8 *)(cmd+1));
+		break;
+	default:
+		break;
+	}
+}
+
+void Uart1_cmd_parser_1(uint8 *cmd)
+{
+	switch(*cmd){
+		case 0x01:
+			P6OUT=0xff;
+			break;
+		case 0x02:
+			P6OUT=0x00;
+			break;
+		default:
+			break;
+	}
+}

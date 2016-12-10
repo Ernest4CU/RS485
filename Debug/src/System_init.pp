@@ -15,6 +15,7 @@ src/System_init.obj: ../src/Watchdog.h
 src/System_init.obj: ../src/uart.h
 src/System_init.obj: ../src/uart1.h
 src/System_init.obj: ../src/TimerA.h
+src/System_init.obj: ../src/Led.h
 
 ../src/System_init.c: 
 ../src/System_init.h: 
@@ -31,3 +32,4 @@ D:/Program\ Files/TI/ccsv6/tools/compiler/ti-cgt-msp430_4.4.5/include/intrinsics
 ../src/uart.h: 
 ../src/uart1.h: 
 ../src/TimerA.h: 
+../src/Led.h: 

@@ -4,7 +4,13 @@
  *  Created on: 2016年12月6日
  *      Author: 58255
  */
+
 #include "Modbus.h"
+
+#include <msp430f149.h>
+#include "uart1.h"
+#include "type.h"
+
 const uint8 auchCRCHi[] = {
 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
@@ -63,6 +69,8 @@ const uint8 auchCRCLo[] = {
 0x43, 0x83, 0x41, 0x81, 0x80, 0x40
 } ;
 
+
+
 uint16 crc16(uint8 *puchMsg, uint16 usDataLen)
 {
 	uint8 uchCRCHi = 0xFF ; /* 高CRC字节初始化 */
@@ -78,4 +86,260 @@ uint16 crc16(uint8 *puchMsg, uint16 usDataLen)
 	return (uchCRCHi << 8 | uchCRCLo) ;
 }
 
+void reactOfcmd01(uint8 *cmd)
+{
+	uint16 add,cnt;
+	add=*cmd;
+	add=add<<8|*(cmd+1);
+	cnt=*(cmd+2);
+	cnt=cnt|*(cmd+3);
+	if(add!=0)
+	{
+		set_uart1_tx_buff(0x0f|0x80,1);
+		set_uart1_tx_buff(0x02,2);
+		set_uart1_tx_crc(3,3);
+		Os_uart1_rsp_len=5;
+		return;
+	}
+	else{
+		set_uart1_tx_buff(0x0f,1); //功能码
+		Os_uart1_rsp_len=2;
+	}
+	switch(add){
+	case 0://唯一就一组led
+		if(cnt==8){
+			set_uart1_tx_buff(1,2);
+			set_uart1_tx_buff(P6IN,3);
+			set_uart1_tx_crc(4,4);
+			Os_uart1_rsp_len=6;
+		}
+		break;
+	default:
+		break;
+	}
+}
 
+
+void reactOfcmd05(uint8 *cmd)
+{
+	uint16 add;
+	add=*cmd;
+	add=add<<8|*(cmd+1);
+	if(add==0||add>8)
+	{
+		set_uart1_tx_buff(0x05|0x80,1);
+		set_uart1_tx_buff(0x02,2);
+		set_uart1_tx_crc(3,3);
+		Os_uart1_rsp_len=5;
+		return;
+	}
+	else{
+		set_uart1_tx_buff(0x05,1);
+		set_uart1_tx_buff(*cmd,2);
+		set_uart1_tx_buff(*(cmd+1),3);
+		Os_uart1_rsp_len=4;
+	}
+	switch(add){
+	case 1:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT0;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT0;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+
+		break;
+	case 2:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT1;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT1;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 3:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT2;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT2;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 4:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT3;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT3;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 5:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT4;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT4;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 6:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT5;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT5;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 7:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT6;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT6;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	case 8:
+		if(*(cmd+2)==0xff){
+			P6OUT&=~BIT7;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else if(*(cmd+2)==0x00){
+			P6OUT|=BIT7;
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_crc(6,6);
+			Os_uart1_rsp_len=8;
+		}else{
+			set_uart1_tx_buff(0x05|0x80,1);
+			set_uart1_tx_buff(0x03,2);
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void reactOfcmd0f(uint8 *cmd)
+{
+	uint16 add,cnt;
+	add=*cmd;
+	add=add<<8|*(cmd+1);
+	cnt=*(cmd+2);
+	cnt=cnt|*(cmd+3);
+	if(add!=0)
+	{
+		set_uart1_tx_buff(0x0f|0x80,1);
+		set_uart1_tx_buff(0x02,2);
+		set_uart1_tx_crc(3,3);
+		Os_uart1_rsp_len=5;
+		return;
+	}
+	else{
+		set_uart1_tx_buff(0x0f,1);
+		set_uart1_tx_buff(*cmd,2);
+		set_uart1_tx_buff(*(cmd+1),3);
+		Os_uart1_rsp_len=4;
+	}
+	switch(add){
+	case 0://唯一就一组led
+		if(cnt==8){
+			set_uart1_tx_buff(*(cmd+2),4);
+			set_uart1_tx_buff(*(cmd+3),5);
+			set_uart1_tx_buff(*(cmd+4),6);//存储的是数据字节数
+			set_uart1_tx_buff(*(cmd+5),7);
+			set_uart1_tx_crc(8,8);
+			Os_uart1_rsp_len=10;
+			P6OUT=*(cmd+5);
+		}
+		break;
+	default:
+		break;
+	}
+}

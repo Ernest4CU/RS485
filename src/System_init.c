@@ -9,18 +9,17 @@
 #include "uart.h"
 #include "uart1.h"
 #include "TimerA.h"
-
+#include "Led.h"
 void Sys_init()
 {
 	Watchdog_init();
 	Clock_Init();
+	LED_Init();
 	LCD_init();
 	TIMERA_Init();
 	UART0_Init();
 	UART1_Init();
 	FlashInit();
-	P6DIR=0xff;
-	P6OUT=0xff;
 	LCD_write_str(LcdLine1,0,"System Starting");
 	LCD_write_str(LcdLine2,8,"...");
 	delay_ms(1000);

@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v4.4.5                      
 ******************************************************************************
->> Linked Tue Dec 06 21:34:48 2016
+>> Linked Wed Dec 07 20:51:27 2016
 
 OUTPUT FILE NAME:   <RS485.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 000017fa
+ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 00001f78
 
 
 MEMORY CONFIGURATION
@@ -14,10 +14,10 @@ MEMORY CONFIGURATION
   SFR                   00000000   00000010  00000000  00000010  RWIX
   PERIPHERALS_8BIT      00000010   000000f0  00000000  000000f0  RWIX
   PERIPHERALS_16BIT     00000100   00000100  00000000  00000100  RWIX
-  RAM                   00000200   00000800  000000af  00000751  RWIX
+  RAM                   00000200   00000800  000000cf  00000731  RWIX
   INFOB                 00001000   00000080  00000000  00000080  RWIX
   INFOA                 00001080   00000080  00000000  00000080  RWIX
-  FLASH                 00001100   0000eee0  00000a38  0000e4a8  RWIX
+  FLASH                 00001100   0000eee0  000011b8  0000dd28  RWIX
   INT00                 0000ffe0   00000002  00000000  00000002  RWIX
   INT01                 0000ffe2   00000002  00000002  00000000  RWIX
   INT02                 0000ffe4   00000002  00000002  00000000  RWIX
@@ -41,81 +41,90 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.bss       0    00000200    00000052     UNINITIALIZED
+.bss       0    00000200    00000070     UNINITIALIZED
                   00000200    0000001e     (.common:uart0_rx_buf)
                   0000021e    0000001e     (.common:uart1_rx_buf)
-                  0000023c    0000000a     (.common:OsUart0CmdBuff)
-                  00000246    0000000a     (.common:OsUart1CmdBuff)
-                  00000250    00000002     (.common:Frequency_cnt)
+                  0000023c    0000001e     (.common:uart1_tx_buf)
+                  0000025a    0000000a     (.common:OsUart0CmdBuff)
+                  00000264    0000000a     (.common:OsUart1CmdBuff)
+                  0000026e    00000002     (.common:Frequency_cnt)
 
-.data      0    00000252    0000000d     UNINITIALIZED
-                  00000252    00000007     uart.obj (.data)
-                  00000259    00000006     uart1.obj (.data)
+.data      0    00000270    0000000f     UNINITIALIZED
+                  00000270    00000007     uart.obj (.data)
+                  00000277    00000007     uart1.obj (.data)
+                  0000027e    00000001     Const_str.obj (.data)
 
 .TI.persistent 
-*          0    00000252    00000000     UNINITIALIZED
+*          0    00000270    00000000     UNINITIALIZED
 
 .stack     0    000009b0    00000050     UNINITIALIZED
                   000009b0    00000002     rts430_eabi.lib : boot.obj (.stack)
                   000009b2    0000004e     --HOLE--
 
-.text      0    00001100    000007fa     
-                  00001100    000000ac     uart1.obj (.text:uart1_displayAll)
-                  000011ac    000000a6     uart1.obj (.text:uart1_get_cmd)
-                  00001252    0000006e     uart.obj (.text:uart0_get_cmd)
-                  000012c0    0000006a     lcd1602.obj (.text:LCD_init)
-                  0000132a    00000064     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
-                  0000138e    0000005c     lcd1602.obj (.text:LCD_Hex8ToAsciiWithOut0x)
-                  000013ea    0000005c     System_init.obj (.text:Sys_init)
-                  00001446    0000005a     interrupt.obj (.text:Timer_A)
-                  000014a0    00000058     rts430_eabi.lib : autoinit.obj (.text:_auto_init)
-                  000014f8    00000052     System_running.obj (.text:Sys_loop)
-                  0000154a    0000004c     uart.obj (.text:UART0_Init)
-                  00001596    00000048     uart1.obj (.text:UART1_Init)
-                  000015de    0000003c     uart.obj (.text:uart0_get_cmdadd)
-                  0000161a    0000003c     uart1.obj (.text:uart1_get_cmdadd)
-                  00001656    00000030     uart.obj (.text:UART0_RX_ISR)
-                  00001686    00000030     uart1.obj (.text:UART1_RX_ISR)
-                  000016b6    0000002e     system.obj (.text:Clock_Init)
-                  000016e4    0000002c     lcd1602.obj (.text:LCD_write_str)
-                  00001710    0000002c     rts430_eabi.lib : asr16.obj (.text)
-                  0000173c    0000002a     lcd1602.obj (.text:LCD_write_com)
-                  00001766    0000002a     lcd1602.obj (.text:LCD_write_data)
-                  00001790    00000028     Modbus.obj (.text:crc16)
-                  000017b8    00000022     lcd1602.obj (.text:LCD_write_char)
-                  000017da    00000020     uart.obj (.text:displayAll)
-                  000017fa    0000001a     rts430_eabi.lib : boot_special.obj (.text:_c_int00_noargs_noexit)
-                  00001814    00000016     uart1.obj (.text:Uart1_cmd_parser_1)
-                  0000182a    00000014     lcd1602.obj (.text:LCD_clear)
-                  0000183e    00000014     lcd1602.obj (.text:Lcd_Portinit)
-                  00001852    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  00001866    00000012                     : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  00001878    00000012                     : memcpy.obj (.text:memcpy)
-                  0000188a    00000010                     : epilog.obj (.text)
-                  0000189a    0000000e     TimerA.obj (.text:TIMERA_Init)
-                  000018a8    0000000e     uart1.obj (.text:Uart1_cmd_parser)
-                  000018b6    0000000c     main.obj (.text:main)
-                  000018c2    0000000a     interrupt.obj (.text:External_interrupt)
-                  000018cc    0000000a     uart1.obj (.text:Uart1_cmd_hander)
-                  000018d6    00000008     Flash.obj (.text:FlashInit)
-                  000018de    00000008     Watchdog.obj (.text:Watchdog_init)
-                  000018e6    00000006     rts430_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
-                  000018ec    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  000018f2    00000004                     : pre_init.obj (.text:_system_pre_init)
-                  000018f6    00000004                     : exit.obj (.text:abort)
+.text      0    00001100    00000f78     
+                  00001100    000004fe     Modbus.obj (.text:reactOfcmd05)
+                  000015fe    000000d4     uart1.obj (.text:Uart1_cmd_parser)
+                  000016d2    000000c2     uart1.obj (.text:uart1_get_cmd)
+                  00001794    000000b8     Modbus.obj (.text:reactOfcmd0f)
+                  0000184c    000000ac     uart1.obj (.text:uart1_displayAll)
+                  000018f8    00000080     Modbus.obj (.text:reactOfcmd01)
+                  00001978    0000006e     uart.obj (.text:uart0_get_cmd)
+                  000019e6    0000006a     lcd1602.obj (.text:LCD_init)
+                  00001a50    00000064     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
+                  00001ab4    0000005c     lcd1602.obj (.text:LCD_Hex8ToAsciiWithOut0x)
+                  00001b10    0000005a     System_running.obj (.text:Sys_loop)
+                  00001b6a    0000005a     interrupt.obj (.text:Timer_A)
+                  00001bc4    00000058     System_init.obj (.text:Sys_init)
+                  00001c1c    00000058     rts430_eabi.lib : autoinit.obj (.text:_auto_init)
+                  00001c74    0000004c     uart.obj (.text:UART0_Init)
+                  00001cc0    00000048     uart1.obj (.text:UART1_Init)
+                  00001d08    0000003c     uart.obj (.text:uart0_get_cmdadd)
+                  00001d44    0000003c     uart1.obj (.text:uart1_get_cmdadd)
+                  00001d80    00000034     uart1.obj (.text:Uart1_SendTxBuff)
+                  00001db4    00000030     uart.obj (.text:UART0_RX_ISR)
+                  00001de4    00000030     uart1.obj (.text:UART1_RX_ISR)
+                  00001e14    0000002e     system.obj (.text:Clock_Init)
+                  00001e42    0000002c     lcd1602.obj (.text:LCD_write_str)
+                  00001e6e    0000002c     rts430_eabi.lib : asr16.obj (.text)
+                  00001e9a    0000002a     lcd1602.obj (.text:LCD_write_com)
+                  00001ec4    0000002a     lcd1602.obj (.text:LCD_write_data)
+                  00001eee    00000028     Modbus.obj (.text:crc16)
+                  00001f16    00000022     lcd1602.obj (.text:LCD_write_char)
+                  00001f38    00000020     uart.obj (.text:displayAll)
+                  00001f58    00000020     uart1.obj (.text:set_uart1_tx_crc)
+                  00001f78    0000001a     rts430_eabi.lib : boot_special.obj (.text:_c_int00_noargs_noexit)
+                  00001f92    00000014     lcd1602.obj (.text:LCD_clear)
+                  00001fa6    00000014     lcd1602.obj (.text:Lcd_Portinit)
+                  00001fba    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00001fce    00000012     uart1.obj (.text:Uart1_Send_Byte)
+                  00001fe0    00000012     rts430_eabi.lib : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  00001ff2    00000012                     : memcpy.obj (.text:memcpy)
+                  00002004    00000010                     : epilog.obj (.text)
+                  00002014    0000000e     TimerA.obj (.text:TIMERA_Init)
+                  00002022    0000000c     main.obj (.text:main)
+                  0000202e    0000000a     interrupt.obj (.text:External_interrupt)
+                  00002038    0000000a     Led.obj (.text:LED_Init)
+                  00002042    0000000a     uart1.obj (.text:Uart1_cmd_hander)
+                  0000204c    00000008     Flash.obj (.text:FlashInit)
+                  00002054    00000008     Watchdog.obj (.text:Watchdog_init)
+                  0000205c    00000008     uart1.obj (.text:set_uart1_tx_buff)
+                  00002064    00000006     rts430_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
+                  0000206a    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  00002070    00000004                     : pre_init.obj (.text:_system_pre_init)
+                  00002074    00000004                     : exit.obj (.text:abort)
 
-.const     0    000018fa    0000021a     
-                  000018fa    00000100     Modbus.obj (.const:.string:auchCRCHi)
-                  000019fa    00000100     Modbus.obj (.const:.string:auchCRCLo)
-                  00001afa    00000014     System_init.obj (.const:.string)
-                  00001b0e    00000006     System_running.obj (.const:.string)
+.const     0    00002078    0000021a     
+                  00002078    00000100     Modbus.obj (.const:.string:auchCRCHi)
+                  00002178    00000100     Modbus.obj (.const:.string:auchCRCLo)
+                  00002278    00000014     System_init.obj (.const:.string)
+                  0000228c    00000006     System_running.obj (.const:.string)
 
-.cinit     0    00001b14    00000024     
-                  00001b14    00000011     (.cinit..data.load) [load image]
-                  00001b25    00000001     --HOLE-- [fill = 0]
-                  00001b26    00000006     (__TI_handler_table)
-                  00001b2c    00000004     (.cinit..bss.load) [load image, compression = zero_init]
-                  00001b30    00000008     (__TI_cinit_table)
+.cinit     0    00002292    00000026     
+                  00002292    00000013     (.cinit..data.load) [load image]
+                  000022a5    00000001     --HOLE-- [fill = 0]
+                  000022a6    00000006     (__TI_handler_table)
+                  000022ac    00000004     (.cinit..bss.load) [load image, compression = zero_init]
+                  000022b0    00000008     (__TI_cinit_table)
 
 .init_array 
 *          0    00001100    00000000     UNINITIALIZED
@@ -169,14 +178,14 @@ NMI        0    0000fffc    00000002
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00001b30 records: 2, size/record: 4, table size: 8
-	.data: load addr=00001b14, load size=00000011 bytes, run addr=00000252, run size=0000000d bytes, compression=copy
-	.bss: load addr=00001b2c, load size=00000004 bytes, run addr=00000200, run size=00000052 bytes, compression=zero_init
+__TI_cinit_table @ 000022b0 records: 2, size/record: 4, table size: 8
+	.data: load addr=00002292, load size=00000013 bytes, run addr=00000270, run size=0000000f bytes, compression=copy
+	.bss: load addr=000022ac, load size=00000004 bytes, run addr=00000200, run size=00000070 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00001b26 records: 3, size/record: 2, table size: 6
+__TI_handler_table @ 000022a6 records: 3, size/record: 2, table size: 6
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -225,30 +234,32 @@ address   name
 00000152  ADC12MEM9               
 00000057  BCSCTL1                 
 00000058  BCSCTL2                 
-000018f6  C$$EXIT                 
+00002074  C$$EXIT                 
 00000059  CACTL1                  
 0000005a  CACTL2                  
 0000005b  CAPD                    
-000016b6  Clock_Init              
+00001e14  Clock_Init              
 00000056  DCOCTL                  
-000018c2  External_interrupt      
+0000027e  DeviceAdd               
+0000202e  External_interrupt      
 00000128  FCTL1                   
 0000012a  FCTL2                   
 0000012c  FCTL3                   
-000018d6  FlashInit               
-00000250  Frequency_cnt           
+0000204c  FlashInit               
+0000026e  Frequency_cnt           
 00000000  IE1                     
 00000001  IE2                     
 00000002  IFG1                    
 00000003  IFG2                    
-0000138e  LCD_Hex8ToAsciiWithOut0x
-0000182a  LCD_clear               
-000012c0  LCD_init                
-000017b8  LCD_write_char          
-0000173c  LCD_write_com           
-00001766  LCD_write_data          
-000016e4  LCD_write_str           
-0000183e  Lcd_Portinit            
+00001ab4  LCD_Hex8ToAsciiWithOut0x
+00001f92  LCD_clear               
+000019e6  LCD_init                
+00001f16  LCD_write_char          
+00001e9a  LCD_write_com           
+00001ec4  LCD_write_data          
+00001e42  LCD_write_str           
+00002038  LED_Init                
+00001fa6  Lcd_Portinit            
 00000134  MAC                     
 00000136  MACS                    
 00000004  ME1                     
@@ -256,14 +267,15 @@ address   name
 00000130  MPY                     
 00000132  MPYS                    
 00000138  OP2                     
-0000023c  OsUart0CmdBuff          
-00000246  OsUart1CmdBuff          
-00000258  Os_uart0_cmd_len        
-00000257  Os_uart0_cmd_nll        
-00000256  Os_uart0_cmd_nln        
-0000025e  Os_uart1_cmd_len        
-0000025d  Os_uart1_cmd_nll        
-0000025c  Os_uart1_cmd_nln        
+0000025a  OsUart0CmdBuff          
+00000264  OsUart1CmdBuff          
+00000276  Os_uart0_cmd_len        
+00000275  Os_uart0_cmd_nll        
+00000274  Os_uart0_cmd_nln        
+0000027c  Os_uart1_cmd_len        
+0000027b  Os_uart1_cmd_nll        
+0000027a  Os_uart1_cmd_nln        
+0000027d  Os_uart1_rsp_len        
 00000022  P1DIR                   
 00000025  P1IE                    
 00000024  P1IES                   
@@ -297,8 +309,8 @@ address   name
 0000013c  RESHI                   
 0000013a  RESLO                   
 0000013e  SUMEXT                  
-000013ea  Sys_init                
-000014f8  Sys_loop                
+00001bc4  Sys_init                
+00001b10  Sys_loop                
 00000172  TACCR0                  
 00000174  TACCR1                  
 00000176  TACCR2                  
@@ -325,8 +337,8 @@ address   name
 00000180  TBCTL                   
 0000011e  TBIV                    
 00000190  TBR                     
-0000189a  TIMERA_Init             
-00001446  Timer_A                 
+00002014  TIMERA_Init             
+00001b6a  Timer_A                 
 00000074  U0BR0                   
 00000075  U0BR1                   
 00000070  U0CTL                   
@@ -343,26 +355,27 @@ address   name
 0000007e  U1RXBUF                 
 00000079  U1TCTL                  
 0000007f  U1TXBUF                 
-0000154a  UART0_Init              
-00001656  UART0_RX_ISR            
-00001596  UART1_Init              
-00001686  UART1_RX_ISR            
-000018cc  Uart1_cmd_hander        
-000018a8  Uart1_cmd_parser        
-00001814  Uart1_cmd_parser_1      
+00001c74  UART0_Init              
+00001db4  UART0_RX_ISR            
+00001cc0  UART1_Init              
+00001de4  UART1_RX_ISR            
+00001d80  Uart1_SendTxBuff        
+00001fce  Uart1_Send_Byte         
+00002042  Uart1_cmd_hander        
+000015fe  Uart1_cmd_parser        
 00000120  WDTCTL                  
-000018de  Watchdog_init           
+00002054  Watchdog_init           
 00000a00  __STACK_END             
 00000050  __STACK_SIZE            
-00001b30  __TI_CINIT_Base         
-00001b38  __TI_CINIT_Limit        
-00001b26  __TI_Handler_Table_Base 
-00001b2c  __TI_Handler_Table_Limit
+000022b0  __TI_CINIT_Base         
+000022b8  __TI_CINIT_Limit        
+000022a6  __TI_Handler_Table_Base 
+000022ac  __TI_Handler_Table_Limit
 UNDEFED   __TI_INITARRAY_Base     
 UNDEFED   __TI_INITARRAY_Limit    
-000018e6  __TI_ISR_TRAP           
-00001866  __TI_decompress_none    
-000018ec  __TI_decompress_rle24   
+00002064  __TI_ISR_TRAP           
+00001fe0  __TI_decompress_none    
+0000206a  __TI_decompress_rle24   
 0000ffe2  __TI_int01              
 0000ffe4  __TI_int02              
 0000ffe6  __TI_int03              
@@ -377,59 +390,65 @@ UNDEFED   __TI_INITARRAY_Limit
 0000fff8  __TI_int12              
 0000fffa  __TI_int13              
 0000fffc  __TI_int14              
-00001852  __TI_zero_init          
+00001fba  __TI_zero_init          
 ffffffff  __binit__               
 ffffffff  __c_args__              
-00001896  __mspabi_func_epilog_1  
-00001894  __mspabi_func_epilog_2  
-00001892  __mspabi_func_epilog_3  
-00001890  __mspabi_func_epilog_4  
-0000188e  __mspabi_func_epilog_5  
-0000188c  __mspabi_func_epilog_6  
-0000188a  __mspabi_func_epilog_7  
-00001710  __mspabi_srai           
-00001738  __mspabi_srai_1         
-00001726  __mspabi_srai_10        
-00001724  __mspabi_srai_11        
-00001722  __mspabi_srai_12        
-00001720  __mspabi_srai_13        
-0000171e  __mspabi_srai_14        
-0000171c  __mspabi_srai_15        
-00001736  __mspabi_srai_2         
-00001734  __mspabi_srai_3         
-00001732  __mspabi_srai_4         
-00001730  __mspabi_srai_5         
-0000172e  __mspabi_srai_6         
-0000172c  __mspabi_srai_7         
-0000172a  __mspabi_srai_8         
-00001728  __mspabi_srai_9         
-000014a0  _auto_init              
-000017fa  _c_int00_noargs_noexit  
+00002010  __mspabi_func_epilog_1  
+0000200e  __mspabi_func_epilog_2  
+0000200c  __mspabi_func_epilog_3  
+0000200a  __mspabi_func_epilog_4  
+00002008  __mspabi_func_epilog_5  
+00002006  __mspabi_func_epilog_6  
+00002004  __mspabi_func_epilog_7  
+00001e6e  __mspabi_srai           
+00001e96  __mspabi_srai_1         
+00001e84  __mspabi_srai_10        
+00001e82  __mspabi_srai_11        
+00001e80  __mspabi_srai_12        
+00001e7e  __mspabi_srai_13        
+00001e7c  __mspabi_srai_14        
+00001e7a  __mspabi_srai_15        
+00001e94  __mspabi_srai_2         
+00001e92  __mspabi_srai_3         
+00001e90  __mspabi_srai_4         
+00001e8e  __mspabi_srai_5         
+00001e8c  __mspabi_srai_6         
+00001e8a  __mspabi_srai_7         
+00001e88  __mspabi_srai_8         
+00001e86  __mspabi_srai_9         
+00001c1c  _auto_init              
+00001f78  _c_int00_noargs_noexit  
 0000fffe  _reset_vector           
 000009b0  _stack                  
-000018f2  _system_pre_init        
-000018f6  abort                   
-000018fa  auchCRCHi               
-000019fa  auchCRCLo               
+00002070  _system_pre_init        
+00002074  abort                   
+00002078  auchCRCHi               
+00002178  auchCRCLo               
 ffffffff  binit                   
-00001790  crc16                   
-000017da  displayAll              
-000018b6  main                    
-00001878  memcpy                  
-00000254  receTimeOut             
-00000255  uart0_commands          
-00000252  uart0_echo              
-00001252  uart0_get_cmd           
-000015de  uart0_get_cmdadd        
+00001eee  crc16                   
+00001f38  displayAll              
+00002022  main                    
+00001ff2  memcpy                  
+000018f8  reactOfcmd01            
+00001100  reactOfcmd05            
+00001794  reactOfcmd0f            
+00000272  receTimeOut             
+0000205c  set_uart1_tx_buff       
+00001f58  set_uart1_tx_crc        
+00000273  uart0_commands          
+00000270  uart0_echo              
+00001978  uart0_get_cmd           
+00001d08  uart0_get_cmdadd        
 00000200  uart0_rx_buf            
-00000253  uart0_rx_end            
-0000025b  uart1_commands          
-00001100  uart1_displayAll        
-000011ac  uart1_get_cmd           
-0000161a  uart1_get_cmdadd        
-0000025a  uart1_receTimeOut       
+00000271  uart0_rx_end            
+00000279  uart1_commands          
+0000184c  uart1_displayAll        
+000016d2  uart1_get_cmd           
+00001d44  uart1_get_cmdadd        
+00000278  uart1_receTimeOut       
 0000021e  uart1_rx_buf            
-00000259  uart1_rx_end            
+00000277  uart1_rx_end            
+0000023c  uart1_tx_buf            
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -572,94 +591,104 @@ address   name
 000001a8  ADC12IV                 
 00000200  uart0_rx_buf            
 0000021e  uart1_rx_buf            
-0000023c  OsUart0CmdBuff          
-00000246  OsUart1CmdBuff          
-00000250  Frequency_cnt           
-00000252  uart0_echo              
-00000253  uart0_rx_end            
-00000254  receTimeOut             
-00000255  uart0_commands          
-00000256  Os_uart0_cmd_nln        
-00000257  Os_uart0_cmd_nll        
-00000258  Os_uart0_cmd_len        
-00000259  uart1_rx_end            
-0000025a  uart1_receTimeOut       
-0000025b  uart1_commands          
-0000025c  Os_uart1_cmd_nln        
-0000025d  Os_uart1_cmd_nll        
-0000025e  Os_uart1_cmd_len        
+0000023c  uart1_tx_buf            
+0000025a  OsUart0CmdBuff          
+00000264  OsUart1CmdBuff          
+0000026e  Frequency_cnt           
+00000270  uart0_echo              
+00000271  uart0_rx_end            
+00000272  receTimeOut             
+00000273  uart0_commands          
+00000274  Os_uart0_cmd_nln        
+00000275  Os_uart0_cmd_nll        
+00000276  Os_uart0_cmd_len        
+00000277  uart1_rx_end            
+00000278  uart1_receTimeOut       
+00000279  uart1_commands          
+0000027a  Os_uart1_cmd_nln        
+0000027b  Os_uart1_cmd_nll        
+0000027c  Os_uart1_cmd_len        
+0000027d  Os_uart1_rsp_len        
+0000027e  DeviceAdd               
 000009b0  _stack                  
 00000a00  __STACK_END             
-00001100  uart1_displayAll        
-000011ac  uart1_get_cmd           
-00001252  uart0_get_cmd           
-000012c0  LCD_init                
-0000138e  LCD_Hex8ToAsciiWithOut0x
-000013ea  Sys_init                
-00001446  Timer_A                 
-000014a0  _auto_init              
-000014f8  Sys_loop                
-0000154a  UART0_Init              
-00001596  UART1_Init              
-000015de  uart0_get_cmdadd        
-0000161a  uart1_get_cmdadd        
-00001656  UART0_RX_ISR            
-00001686  UART1_RX_ISR            
-000016b6  Clock_Init              
-000016e4  LCD_write_str           
-00001710  __mspabi_srai           
-0000171c  __mspabi_srai_15        
-0000171e  __mspabi_srai_14        
-00001720  __mspabi_srai_13        
-00001722  __mspabi_srai_12        
-00001724  __mspabi_srai_11        
-00001726  __mspabi_srai_10        
-00001728  __mspabi_srai_9         
-0000172a  __mspabi_srai_8         
-0000172c  __mspabi_srai_7         
-0000172e  __mspabi_srai_6         
-00001730  __mspabi_srai_5         
-00001732  __mspabi_srai_4         
-00001734  __mspabi_srai_3         
-00001736  __mspabi_srai_2         
-00001738  __mspabi_srai_1         
-0000173c  LCD_write_com           
-00001766  LCD_write_data          
-00001790  crc16                   
-000017b8  LCD_write_char          
-000017da  displayAll              
-000017fa  _c_int00_noargs_noexit  
-00001814  Uart1_cmd_parser_1      
-0000182a  LCD_clear               
-0000183e  Lcd_Portinit            
-00001852  __TI_zero_init          
-00001866  __TI_decompress_none    
-00001878  memcpy                  
-0000188a  __mspabi_func_epilog_7  
-0000188c  __mspabi_func_epilog_6  
-0000188e  __mspabi_func_epilog_5  
-00001890  __mspabi_func_epilog_4  
-00001892  __mspabi_func_epilog_3  
-00001894  __mspabi_func_epilog_2  
-00001896  __mspabi_func_epilog_1  
-0000189a  TIMERA_Init             
-000018a8  Uart1_cmd_parser        
-000018b6  main                    
-000018c2  External_interrupt      
-000018cc  Uart1_cmd_hander        
-000018d6  FlashInit               
-000018de  Watchdog_init           
-000018e6  __TI_ISR_TRAP           
-000018ec  __TI_decompress_rle24   
-000018f2  _system_pre_init        
-000018f6  C$$EXIT                 
-000018f6  abort                   
-000018fa  auchCRCHi               
-000019fa  auchCRCLo               
-00001b26  __TI_Handler_Table_Base 
-00001b2c  __TI_Handler_Table_Limit
-00001b30  __TI_CINIT_Base         
-00001b38  __TI_CINIT_Limit        
+00001100  reactOfcmd05            
+000015fe  Uart1_cmd_parser        
+000016d2  uart1_get_cmd           
+00001794  reactOfcmd0f            
+0000184c  uart1_displayAll        
+000018f8  reactOfcmd01            
+00001978  uart0_get_cmd           
+000019e6  LCD_init                
+00001ab4  LCD_Hex8ToAsciiWithOut0x
+00001b10  Sys_loop                
+00001b6a  Timer_A                 
+00001bc4  Sys_init                
+00001c1c  _auto_init              
+00001c74  UART0_Init              
+00001cc0  UART1_Init              
+00001d08  uart0_get_cmdadd        
+00001d44  uart1_get_cmdadd        
+00001d80  Uart1_SendTxBuff        
+00001db4  UART0_RX_ISR            
+00001de4  UART1_RX_ISR            
+00001e14  Clock_Init              
+00001e42  LCD_write_str           
+00001e6e  __mspabi_srai           
+00001e7a  __mspabi_srai_15        
+00001e7c  __mspabi_srai_14        
+00001e7e  __mspabi_srai_13        
+00001e80  __mspabi_srai_12        
+00001e82  __mspabi_srai_11        
+00001e84  __mspabi_srai_10        
+00001e86  __mspabi_srai_9         
+00001e88  __mspabi_srai_8         
+00001e8a  __mspabi_srai_7         
+00001e8c  __mspabi_srai_6         
+00001e8e  __mspabi_srai_5         
+00001e90  __mspabi_srai_4         
+00001e92  __mspabi_srai_3         
+00001e94  __mspabi_srai_2         
+00001e96  __mspabi_srai_1         
+00001e9a  LCD_write_com           
+00001ec4  LCD_write_data          
+00001eee  crc16                   
+00001f16  LCD_write_char          
+00001f38  displayAll              
+00001f58  set_uart1_tx_crc        
+00001f78  _c_int00_noargs_noexit  
+00001f92  LCD_clear               
+00001fa6  Lcd_Portinit            
+00001fba  __TI_zero_init          
+00001fce  Uart1_Send_Byte         
+00001fe0  __TI_decompress_none    
+00001ff2  memcpy                  
+00002004  __mspabi_func_epilog_7  
+00002006  __mspabi_func_epilog_6  
+00002008  __mspabi_func_epilog_5  
+0000200a  __mspabi_func_epilog_4  
+0000200c  __mspabi_func_epilog_3  
+0000200e  __mspabi_func_epilog_2  
+00002010  __mspabi_func_epilog_1  
+00002014  TIMERA_Init             
+00002022  main                    
+0000202e  External_interrupt      
+00002038  LED_Init                
+00002042  Uart1_cmd_hander        
+0000204c  FlashInit               
+00002054  Watchdog_init           
+0000205c  set_uart1_tx_buff       
+00002064  __TI_ISR_TRAP           
+0000206a  __TI_decompress_rle24   
+00002070  _system_pre_init        
+00002074  C$$EXIT                 
+00002074  abort                   
+00002078  auchCRCHi               
+00002178  auchCRCLo               
+000022a6  __TI_Handler_Table_Base 
+000022ac  __TI_Handler_Table_Limit
+000022b0  __TI_CINIT_Base         
+000022b8  __TI_CINIT_Limit        
 0000ffe2  __TI_int01              
 0000ffe4  __TI_int02              
 0000ffe6  __TI_int03              
@@ -681,4 +710,4 @@ ffffffff  binit
 UNDEFED   __TI_INITARRAY_Base     
 UNDEFED   __TI_INITARRAY_Limit    
 
-[244 symbols]
+[254 symbols]

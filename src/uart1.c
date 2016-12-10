@@ -1,13 +1,14 @@
 #include "uart1.h"
-#include "lcd1602.h"
-#include "Sys_Config.h"
+
 #include <msp430x14x.h>
+
+#include "Const_str.h"
+#include "lcd1602.h"
 #include "Modbus.h"
-#include "const_str.h"
-#include "type.h"
+#include "Sys_Config.h"
 
 uint8 uart1_rx_buf[UART1_RX_BUFLEN];//串口0的读buff区
-
+uint8 uart1_tx_buf[UART1_TX_BUFLEN];//串口0的读buff区
 //uint8 uart0_echo=1;
 uint8 uart1_rx_end=1;
 signed char uart1_receTimeOut=-1;
@@ -16,6 +17,8 @@ signed char uart1_commands=0;//记录命令个数
 uint8 Os_uart1_cmd_nln=1;
 uint8 Os_uart1_cmd_nll=1;
 uint8 Os_uart1_cmd_len=0;
+uint8 Os_uart1_rsp_len=0;//记录相应数据有效长度
+
 uint8 OsUart1CmdBuff[UART1CMDLEN];//串口0命令buff区
 
 
@@ -59,8 +62,6 @@ void Uart1_Send_Byte(unsigned char data)
 	P5OUT|=BIT2;
 	while((IFG2&UTXIFG1)==0);          //发送寄存器空的时候发送数据
 	U1TXBUF=data;
-	delay_ms(5);		//切换之前先有个小延时
-	P5OUT&=~BIT2;
 }
 
 
@@ -95,6 +96,23 @@ void Uart1_Send_Uint32(uint32 data)
 	Uart1_Send_Byte(temp|0x30);
 	temp=data%10;
 	Uart1_Send_Byte(temp|0x30);
+}
+
+void Uart1_SendTxBuff(uint8 len)
+{
+	uint8 i=0,templen=0;
+	if(len>UART1_TX_BUFLEN){
+		templen=UART1_TX_BUFLEN;
+	}else{
+		templen=len;
+	}
+
+	for(i=0;i<templen;i++){
+		Uart1_Send_Byte(uart1_tx_buf[i]);
+	}
+
+	delay_ms(5);		//切换之前先有个小延时
+	P5OUT&=~BIT2;
 }
 
 void Uart1_display_Uint32(uint32 data)
@@ -188,27 +206,39 @@ uint8 uart1_get_cmd()
 	uint16 crcData=0x0000;
 	uint8 i=0;
 	uint8 j=0;
-	if(Os_uart1_cmd_nln>Os_uart1_cmd_nll){
-		for(i=Os_uart1_cmd_nll;i<Os_uart1_cmd_nln;i++){
-				OsUart1CmdBuff[j++]=uart1_rx_buf[i];
-			}
-	}else if(Os_uart1_cmd_nln<Os_uart1_cmd_nll){
-		for(i=Os_uart1_cmd_nll;i<UART1_RX_BUFLEN;i++){
-				OsUart1CmdBuff[j++]=uart1_rx_buf[i];
-			}
-		for(i=0;i<Os_uart1_cmd_nln;i++){
-				OsUart1CmdBuff[j++]=uart1_rx_buf[i];
-			}
-	}else {
-		;
-	}
-	crcData=crc16(OsUart1CmdBuff,Os_uart1_cmd_len-2);
-	if(crcData!=OsUart1CmdBuff[Os_uart1_cmd_len-1]+(OsUart1CmdBuff[Os_uart1_cmd_len-2]<<8))
+	if(Os_uart1_cmd_len>UART1CMDLEN)
 	{
-		checkCrcErr=1;
+		checkCrcErr=2;//命令长度过长
+	}else{
+		if(Os_uart1_cmd_nln>Os_uart1_cmd_nll){
+			for(i=Os_uart1_cmd_nll;i<Os_uart1_cmd_nln;i++){
+					OsUart1CmdBuff[j++]=uart1_rx_buf[i];
+				}
+		}else if(Os_uart1_cmd_nln<Os_uart1_cmd_nll){
+			for(i=Os_uart1_cmd_nll;i<UART1_RX_BUFLEN;i++){
+					OsUart1CmdBuff[j++]=uart1_rx_buf[i];
+				}
+			for(i=0;i<Os_uart1_cmd_nln;i++){
+					OsUart1CmdBuff[j++]=uart1_rx_buf[i];
+				}
+		}else {
+			;
+		}
+		//CRC校验
+		crcData=crc16(OsUart1CmdBuff,Os_uart1_cmd_len-2);
+		if(crcData!=OsUart1CmdBuff[Os_uart1_cmd_len-1]+(OsUart1CmdBuff[Os_uart1_cmd_len-2]<<8))
+		{
+			checkCrcErr=1;//crc校验错误
+		}
+		//地址校验
+		if(OsUart1CmdBuff[0]!=DeviceAdd)
+		{
+			checkCrcErr=1;
+		}
+		uart1_tx_buf[0]=DeviceAdd;
 	}
-	return checkCrcErr;
 
+	return checkCrcErr;
 }
 
 
@@ -219,27 +249,80 @@ void Uart1_cmd_hander()
 	//清除指令buff
 }
 
-void Uart1_cmd_parser(uint8 *cmd)
+void Uart1_cmd_parser(uint8 *cmd)//地址校验
 {
-	switch(*cmd){
+	switch(*(cmd+1)){
 	case 0x01:
-		Uart1_cmd_parser_1((uint8 *)(cmd+1));
+		//读取led状态
+		if(Os_uart1_cmd_len!=8) //0x05命令长度为8，如果命令不对则退出
+		{
+			uart1_tx_buf[1]=*(cmd+1)|0x80;
+			uart1_tx_buf[2]=0x01;
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+			break;
+		}
+		reactOfcmd01((uint8 *)(cmd+2));
+		break;
+	case 0x05:
+		//设置LED状态
+		if(Os_uart1_cmd_len!=8) //0x05命令长度为8，如果命令不对则退出
+		{
+			uart1_tx_buf[1]=*(cmd+1)|0x80;
+			uart1_tx_buf[2]=0x01;
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+			break;
+		}
+		uart1_tx_buf[1]=0x05;//输入命令码
+		reactOfcmd05((uint8 *)(cmd+2));
+		break;
+	case 0x0F:
+		//设置多个LED状态
+		if(Os_uart1_cmd_len!=10) //0x05命令长度为8，如果命令不对则退出
+		{
+			uart1_tx_buf[1]=*(cmd+1)|0x80;
+			uart1_tx_buf[2]=0x01;
+			set_uart1_tx_crc(3,3);
+			Os_uart1_rsp_len=5;
+			break;
+		}
+		reactOfcmd0f((uint8 *)(cmd+2));
 		break;
 	default:
+		//无此功能码反馈
+		uart1_tx_buf[1]=*(cmd+1)|0x80;
+		uart1_tx_buf[2]=0x01;
+		set_uart1_tx_crc(3,3);
+		Os_uart1_rsp_len=5;
 		break;
 	}
 }
 
-void Uart1_cmd_parser_1(uint8 *cmd)
+void Uart1_cmd_parser_1(uint8 *cmd)//命令校验
 {
 	switch(*cmd){
 		case 0x01:
-			P6OUT=0xff;
+			//读取led状态
+			Uart1_SendTxBuff(8);
 			break;
 		case 0x02:
-			P6OUT=0x00;
+			//设置LED状态
+
 			break;
 		default:
 			break;
 	}
+}
+
+void set_uart1_tx_buff(uint8 temp,uint8 add)
+{
+	uart1_tx_buf[add]=temp;
+}
+
+void set_uart1_tx_crc(uint8 add,uint8 len)
+{
+	uint16 checkCrc=crc16(uart1_tx_buf,len);
+	uart1_tx_buf[add+1]=checkCrc;
+	uart1_tx_buf[add]=checkCrc>>8;
 }

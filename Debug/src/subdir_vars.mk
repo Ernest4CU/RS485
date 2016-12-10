@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/Const_str.c \
 ../src/Flash.c \
+../src/Led.c \
 ../src/Modbus.c \
 ../src/System_init.c \
 ../src/System_running.c \
@@ -21,6 +22,7 @@ C_SRCS += \
 OBJS += \
 ./src/Const_str.obj \
 ./src/Flash.obj \
+./src/Led.obj \
 ./src/Modbus.obj \
 ./src/System_init.obj \
 ./src/System_running.obj \
@@ -36,6 +38,7 @@ OBJS += \
 C_DEPS += \
 ./src/Const_str.pp \
 ./src/Flash.pp \
+./src/Led.pp \
 ./src/Modbus.pp \
 ./src/System_init.pp \
 ./src/System_running.pp \
@@ -51,6 +54,7 @@ C_DEPS += \
 C_DEPS__QUOTED += \
 "src\Const_str.pp" \
 "src\Flash.pp" \
+"src\Led.pp" \
 "src\Modbus.pp" \
 "src\System_init.pp" \
 "src\System_running.pp" \
@@ -66,6 +70,7 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "src\Const_str.obj" \
 "src\Flash.obj" \
+"src\Led.obj" \
 "src\Modbus.obj" \
 "src\System_init.obj" \
 "src\System_running.obj" \
@@ -81,6 +86,7 @@ OBJS__QUOTED += \
 C_SRCS__QUOTED += \
 "../src/Const_str.c" \
 "../src/Flash.c" \
+"../src/Led.c" \
 "../src/Modbus.c" \
 "../src/System_init.c" \
 "../src/System_running.c" \
